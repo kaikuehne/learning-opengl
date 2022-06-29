@@ -1,0 +1,3 @@
+*.exe
+!glslangValidator.exe
+!spirv-remap.exe
