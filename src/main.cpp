@@ -15,24 +15,18 @@
 #define DRAG_SPEED 0.1
 const int WINDOW_WIDTH = 3840 / 2;
 const int WINDOW_HEIGHT = 2160 / 2;
+const int WINDOW_FULLSCREEN = false;
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
-void debug_message_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
+void debug_message_callback(GLenum source, GLenum type, GLuint id,
+                            GLenum severity, GLsizei length,
                             const GLchar *message, const void *userParam);
 
-#include <dwmapi.h>
-
 int main() {
-    HRESULT hr = DwmEnableComposition(DWM_EC_DISABLECOMPOSITION);
-    if (!SUCCEEDED(hr)) {
-        fprintf(stderr, "Could not disable window compositor");
-        exit(-1);
-    }
-
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_SAMPLES, 16);
     glfwWindowHint(GLFW_REFRESH_RATE, 60);
@@ -43,8 +37,15 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-    GLFWwindow *window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "LearnOpenGL", NULL, NULL);
-    // GLFWwindow *window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "LearnOpenGL", glfwGetPrimaryMonitor(), NULL);
+    GLFWwindow *window;
+    if (WINDOW_FULLSCREEN) {
+        window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "LearnOpenGL",
+                                  glfwGetPrimaryMonitor(), NULL);
+    } else {
+        window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "LearnOpenGL",
+                                  NULL, NULL);
+    }
+
     if (window == NULL) {
         fprintf(stderr, "%s\n", "Failed to create GLFW window");
         glfwTerminate();
@@ -52,7 +53,7 @@ int main() {
     }
 
     glfwMakeContextCurrent(window);
-    // glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         fprintf(stderr, "%s\n", "Failed to initialize GLAD");
@@ -63,12 +64,13 @@ int main() {
     glEnable(GL_DEBUG_OUTPUT);
     glDebugMessageCallback(debug_message_callback, 0);
 
-    auto sprite =
-        ResourceManager::load_shader("sprite", "..\\src\\shader.vs", "..\\src\\shader.fs");
+    auto sprite = ResourceManager::load_shader("sprite", "..\\src\\shader.vs",
+                                               "..\\src\\shader.fs");
     auto tapir = ResourceManager::load_texture("tapir", "..\\tapir.png", false);
 
-    auto projection = HMM_Orthographic(0.0f, static_cast<float>(WINDOW_WIDTH),
-                                       static_cast<float>(WINDOW_HEIGHT), 0.0f, -1.0f, 1.0f);
+    auto projection =
+        HMM_Orthographic(0.0f, static_cast<float>(WINDOW_WIDTH),
+                         static_cast<float>(WINDOW_HEIGHT), 0.0f, -1.0f, 1.0f);
     sprite.use();
     sprite.integer("sprite", 0);
     sprite.matrix4("projection", projection);
@@ -99,8 +101,8 @@ int main() {
         y += 500 * sin(glfwGetTime() + 100) * dt;
         sr->draw(tapir, HMM_Vec2(x, y), size);
         y += 300;
-        sr->draw(tapir, HMM_Vec2(x + 700.0f, y + 500.0f), HMM_Vec2(size.X - 100, size.Y - 100),
-                 rotation_degrees);
+        sr->draw(tapir, HMM_Vec2(x + 700.0f, y + 500.0f),
+                 HMM_Vec2(size.X - 100, size.Y - 100), rotation_degrees);
         y -= 300;
 
         glfwSwapBuffers(window);
@@ -113,10 +115,13 @@ int main() {
     return 0;
 }
 
-void debug_message_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
+void debug_message_callback(GLenum source, GLenum type, GLuint id,
+                            GLenum severity, GLsizei length,
                             const GLchar *message, const void *userParam) {
-    fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-            (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type, severity, message);
+    fprintf(stderr,
+            "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+            (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type,
+            severity, message);
 }
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
