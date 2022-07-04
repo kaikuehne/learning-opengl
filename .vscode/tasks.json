@@ -6,7 +6,7 @@
             "type": "shell",
             "command": "make",
             "windows": {
-                "command": "make"
+                "command": "cmd.exe /c build.bat"
             },
             "group": "build",
             "presentation": {

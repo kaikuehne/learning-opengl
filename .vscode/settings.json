@@ -1,3 +1,8 @@
 {
-    "makefile.extensionOutputFolder": "./.vscode"
+    "makefile.extensionOutputFolder": "./.vscode",
+    "files.associations": {
+        "sokol_app.h": "c",
+        "sokol_gfx.h": "c",
+        "stb_image.h": "c"
+    }
 }

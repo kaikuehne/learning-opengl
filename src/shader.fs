@@ -2,14 +2,11 @@
 
 out vec4 FragColor;
 
-in vec2 texCoord;
+in vec2 TexCoords;
 
-uniform sampler2D ourTexture;
-uniform float time;
+uniform sampler2D sprite;
+uniform vec3 spriteColor;
 
 void main() {
-	// vec2 yolo;
-	// yolo.x = cos(time) + texCoord.x;
-	// yolo.y = sin(time) * texCoord.y;
-	FragColor = texture(ourTexture, texCoord);
+	FragColor = vec4(spriteColor, 1.0) * texture(sprite, TexCoords);
 }
