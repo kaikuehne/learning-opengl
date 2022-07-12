@@ -20,8 +20,7 @@ class ResourceManager {
     static void clear();
 
   private:
-    ResourceManager() {
-    }
+    ResourceManager() {}
     static Shader load_shader_from_file(const char *path_vs, const char *path_fs);
     static Texture load_texture_from_file(const char *path, bool alpha);
 };

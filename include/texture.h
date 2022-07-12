@@ -6,7 +6,8 @@
 class Texture {
   public:
     unsigned int id;
-    unsigned int width, height;
+    unsigned int width;
+    unsigned int height;
     unsigned int format;
     unsigned int image_format;
     unsigned int wrap_s;

@@ -3,6 +3,10 @@
     "files.associations": {
         "sokol_app.h": "c",
         "sokol_gfx.h": "c",
-        "stb_image.h": "c"
+        "stb_image.h": "c",
+        "array": "cpp",
+        "string_view": "cpp",
+        "initializer_list": "cpp",
+        "utility": "cpp"
     }
 }

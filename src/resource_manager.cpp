@@ -14,18 +14,14 @@ Shader ResourceManager::load_shader(std::string name, const char *path_vs, const
     return shaders[name];
 }
 
-Shader ResourceManager::get_shader(std::string name) {
-    return shaders[name];
-}
+Shader ResourceManager::get_shader(std::string name) { return shaders[name]; }
 
 Texture ResourceManager::load_texture(std::string name, const char *file, bool alpha) {
     textures[name] = load_texture_from_file(file, alpha);
     return textures[name];
 }
 
-Texture ResourceManager::get_texture(std::string name) {
-    return textures[name];
-}
+Texture ResourceManager::get_texture(std::string name) { return textures[name]; }
 
 void ResourceManager::clear() {
     for (auto iter : shaders) {
